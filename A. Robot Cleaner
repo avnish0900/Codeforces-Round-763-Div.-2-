@@ -1,0 +1,174 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define int              long long
+#define all(xs)          xs.begin(), xs.end()
+#define rall(xs)         xs.rbegin(), xs.rend()
+#define sz(x)            (int)((x).size())
+#define pb               push_back
+#define ppb              pop_back
+#define pf               push_front
+#define ppf              pop_front
+#define ff               first
+#define ss               second
+#define prec(n)          fixed<<setprecision(n)
+#define debug(x)         cout << (#x) << " is " << (x) << "\n"
+#define debug2(x, y)     cout << #x << "=" << x << "," << #y << "=" << y << "\n"
+#define debug3(x, y,z)   cout << #x << "=" << x << "," << #y << "=" << y << "," << #z << "=" << z << "\n"
+#define debug4(x, y,z,a) cout << #x << "=" << x << "," << #y << "=" << y << "," << #z << "=" << z <<" "<<#a << "=" << a << "\n"
+#define yes              cout<<"YES";
+#define no               cout<<"NO";
+#define ll               cout<<"\n";
+#define INF              2e18
+int gcd(int A,int B){    return (B == 0) ? A : gcd(B, A % B);}
+int lcm(int A,int B){    return A * B / gcd(A, B);}
+const int N=2e6+10;
+const int NN=1e9+10;
+const int mod = 1e9 + 7;
+
+// for mod inverse calculate bexp(num, mod-2, mod);
+int bmul(int a, int b){
+    int ans = 0;
+    while(b>0){
+        if(b & 1){
+            ans = (ans + a)%mod;
+        }
+        a = (a + a) % mod;
+        b >>= 1;
+    }
+    return ans;
+}
+
+
+int bexpo(int a, int b){
+    int ans = 1;
+    while(b){
+        if(b & 1){
+            ans = bmul(ans, a);
+        }
+        a = bmul(a, a);
+        b >>= 1;
+    }
+    return ans;
+}
+// ==========================================================================
+// =========================================================================
+int hp[N+10];
+int factormultiple[N+10];
+void precompute(){
+    for(int i=2; i<N; i++){
+        if(hp[i] == 0){
+            for(int j=i; j<N; j+=i){
+                hp[j] = i;
+            }
+        }
+    }
+}
+
+vector<int> distinctpf(int num){
+    vector<int> ans;
+    while(num > 1){
+        int val = hp[num];
+        while(num%val == 0){
+            num /= val;
+        }
+        ans.pb(val);
+    }
+    return ans;
+}
+int hsh[N];
+// ========================================================================
+// ==========================================================================
+
+bool comp(pair<int, int> a, pair<int, int> b){
+    if(a.ff == b.ff){
+        return a.ss > b.ss;
+    }
+    return a.ff < b.ff;
+}
+
+pair<bool, int> check(vector<pair<int, int>>& arr, int x, int l, int r){
+    int lll = x-1;
+    int rr = x+1;
+    // debug3(x, lll, rr);
+    int pos = 0;
+    for(auto it: arr){
+        // debug3(l,r, x);
+        if(it.ff == l and it.ss == lll){
+            // debug3(l,r, x);
+            // debug2(it.ff, it.ss);
+            if(!(it.ff == l and it.ss == r)){
+                // debug3(l,r, x);
+                // debug2(it.ff, it.ss);
+                int index = 0;
+                for(auto itt: arr){
+                    // debug2(index, pos);
+                    // debug4(itt.ff, itt.ss, rr, r);
+                    if(index == pos){
+                        index++;
+                        continue;
+                    }
+                    // debug4(itt.ff, itt.ss, rr, r);
+                    if(itt.ff == rr and itt.ss == r){
+                       return {true, x};   
+                    }
+                    index++;
+                } 
+            }
+        }
+        if(it.ff == l and it.ss == lll){
+           return {true, x};   
+        }
+        if(it.ff == rr and it.ss == r){
+           return {true, x};   
+        }
+        pos++;
+    }
+    return {false, -1};
+}
+
+void solve(){
+    int n, m;
+    cin >> n >> m;
+    int sr, sc;
+    cin >> sr >> sc;
+    int er, ec;
+    cin >> er >> ec;
+    int ans = 0;
+    int dr = 1, dc = 1;
+    for(int i=1;true;i++){
+        if(sr == er or sc == ec){
+            break;
+        }
+        int nr = sr + dr;
+        int nc = sc + dc;
+        if(nr < 1 or nr > n){
+            dr *= -1;
+        }
+        if(nc < 1 or nc > m){
+            dc *= -1;
+        }
+        sr += dr;
+        sc += dc;
+        ans++;
+    }
+    cout<<ans;ll;
+    return;
+}
+
+signed main(){
+    #ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+    #endif
+    ios_base::sync_with_stdio(false), cin.tie(NULL);
+    int t=1;
+    cin>>t;
+    // memset(hp, 0, sizeof hp);
+    // memset(hsh, 0, sizeof hp);
+    // memset(factormultiple, 0, sizeof hp);
+    // precompute();
+    for(int i=0;i<t;i++){
+        // cout<<"Case #"<<i+1<<": "; 
+       solve();
+    }
+}
